@@ -1,0 +1,28 @@
+name: Java App CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t ahmad0977/java-app:latest .
+        
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push ahmad0977/java-app:latest
